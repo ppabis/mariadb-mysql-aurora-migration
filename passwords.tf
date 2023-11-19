@@ -1,5 +1,5 @@
 locals {
-  databases = toset(["MariaDB", "MySQL"])
+  databases = toset(["MariaDB", "MySQL57"])
 }
 
 resource "random_password" "passwords" {
