@@ -10,6 +10,7 @@ resource "aws_db_instance" "MySQL" {
   password                = random_password.passwords["MySQL57"].result
   username                = "mysql57"
   vpc_security_group_ids  = [aws_security_group.MariaDB.id]
+  skip_final_snapshot     = true
 }
 
 output "mysql-endpoint" {

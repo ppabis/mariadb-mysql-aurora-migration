@@ -37,6 +37,7 @@ resource "aws_db_instance" "MariaDB" {
   password                = random_password.passwords["MariaDB"].result
   username                = "mariadb"
   vpc_security_group_ids  = [aws_security_group.MariaDB.id]
+  skip_final_snapshot     = true
 }
 
 output "mariadb-endpoint" {
