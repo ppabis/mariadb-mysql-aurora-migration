@@ -47,3 +47,14 @@ output "mariadb-password" {
   value     = random_password.passwords["MariaDB"].result
   sensitive = true
 }
+
+resource "aws_secretsmanager_secret_version" "updated-mariadb" {
+  secret_id = aws_secretsmanager_secret.creds["MariaDB"].id
+  secret_string = jsonencode({
+    engine   = "mariadb"
+    username = "mariadb"
+    password = random_password.passwords["MariaDB"].result
+    host     = aws_db_instance.MariaDB.address
+    port     = aws_db_instance.MariaDB.port
+  })
+}

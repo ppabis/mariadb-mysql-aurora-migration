@@ -20,3 +20,14 @@ output "mysql-password" {
   value     = random_password.passwords["MySQL57"].result
   sensitive = true
 }
+
+resource "aws_secretsmanager_secret_version" "updated-mysql" {
+  secret_id = aws_secretsmanager_secret.creds["MySQL57"].id
+  secret_string = jsonencode({
+    engine   = "mariadb"
+    username = "mysql57"
+    password = random_password.passwords["MySQL57"].result
+    host     = aws_db_instance.MySQL.address
+    port     = aws_db_instance.MySQL.port
+  })
+}
