@@ -1,6 +1,7 @@
 resource "aws_vpc" "production" {
-  tags       = { Name = "ProductionVPC" }
-  cidr_block = "10.6.0.0/16"
+  tags                 = { Name = "ProductionVPC" }
+  cidr_block           = "10.6.0.0/16"
+  enable_dns_hostnames = true
 }
 
 resource "aws_subnet" "production" {
