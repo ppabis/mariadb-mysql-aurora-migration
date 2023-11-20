@@ -8,9 +8,14 @@ resource "random_password" "passwords" {
   special  = false
 }
 
+resource "random_string" "id-suffix" {
+  length  = 4
+  special = false
+}
+
 resource "aws_secretsmanager_secret" "creds" {
   for_each    = local.databases
-  name        = "${each.key}Credentials"
+  name        = "${each.key}Credentials${random_string.id-suffix.result}"
   description = "Credentials for the ${each.key}"
 }
 
