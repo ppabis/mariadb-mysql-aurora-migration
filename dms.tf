@@ -39,4 +39,23 @@ resource "aws_dms_replication_instance" "instance" {
   engine_version              = "3.5.1"
   vpc_security_group_ids      = [aws_security_group.DMS-SG.id]
   replication_instance_id     = "dms-instance"
+  depends_on                  = [aws_vpc_endpoint.dms-endpoint]
+}
+
+resource "aws_security_group" "DMS-Endpoint-SG" {
+  name   = "DMS-Endpoint-SG"
+  vpc_id = aws_vpc.production.id
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.production.cidr_block]
+  }
+}
+resource "aws_vpc_endpoint" "dms-endpoint" {
+  vpc_endpoint_type  = "Interface"
+  vpc_id             = aws_vpc.production.id
+  service_name       = "com.amazonaws.eu-west-1.dms"
+  subnet_ids         = aws_subnet.production[*].id
+  security_group_ids = [aws_security_group.DMS-Endpoint-SG.id]
 }
