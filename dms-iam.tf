@@ -36,3 +36,24 @@ resource "aws_iam_role_policy_attachment" "dms-secrets-manager-policy" {
   role       = aws_iam_role.DmsRole.name
   policy_arn = aws_iam_policy.dms-secrets-manager-policy.arn
 }
+
+# Role for DMS to do things in the VPC
+data "aws_iam_policy_document" "dms-vpc-trust" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["dms.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "dms-vpc-role" {
+  name               = "dms-vpc-role"
+  assume_role_policy = data.aws_iam_policy_document.dms-vpc-trust.json
+}
+
+resource "aws_iam_role_policy_attachment" "dms-vpc-policy" {
+  role       = aws_iam_role.dms-vpc-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"
+}
