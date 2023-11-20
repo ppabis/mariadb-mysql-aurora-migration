@@ -26,6 +26,25 @@ resource "aws_security_group" "MariaDB" {
   }
 }
 
+resource "aws_db_parameter_group" "MariaDB" {
+  family = "mariadb10.6"
+  name   = "mariadb-custom"
+  parameter {
+    name  = "binlog_format"
+    value = "ROW"
+  }
+  parameter {
+    apply_method = "pending-reboot"
+    name         = "binlog_checksum"
+    value        = "NONE"
+  }
+  parameter {
+    apply_method = "pending-reboot"
+    name         = "binlog_row_image"
+    value        = "FULL"
+  }
+}
+
 resource "aws_db_instance" "MariaDB" {
   engine                  = "mariadb"
   instance_class          = "db.t2.small"
@@ -39,6 +58,7 @@ resource "aws_db_instance" "MariaDB" {
   username                = "mariadb"
   vpc_security_group_ids  = [aws_security_group.MariaDB.id]
   skip_final_snapshot     = true
+  parameter_group_name    = aws_db_parameter_group.MariaDB.name
 }
 
 output "mariadb-endpoint" {

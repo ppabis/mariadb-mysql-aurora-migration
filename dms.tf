@@ -12,6 +12,7 @@ resource "aws_dms_endpoint" "target" {
   endpoint_type                   = "target"
   engine_name                     = "mysql"
   endpoint_id                     = "mysql-target"
+  extra_connection_attributes     = "Initstmt=SET FOREIGN_KEY_CHECKS=0;"
 }
 
 resource "aws_dms_replication_subnet_group" "subnets" {
