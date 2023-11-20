@@ -18,6 +18,7 @@ resource "aws_dms_replication_subnet_group" "subnets" {
   replication_subnet_group_id          = "dms-subnets"
   replication_subnet_group_description = "DMS Subnets in Production VPC"
   subnet_ids                           = aws_subnet.production[*].id
+  depends_on                           = [aws_iam_role_policy_attachment.dms-vpc-policy]
 }
 
 resource "aws_security_group" "DMS-SG" {
@@ -35,7 +36,7 @@ resource "aws_dms_replication_instance" "instance" {
   replication_subnet_group_id = aws_dms_replication_subnet_group.subnets.id
   replication_instance_class  = "dms.t2.micro"
   allocated_storage           = 20
-  engine_version              = "3.4.4"
+  engine_version              = "3.5.1"
   vpc_security_group_ids      = [aws_security_group.DMS-SG.id]
   replication_instance_id     = "dms-instance"
 }
