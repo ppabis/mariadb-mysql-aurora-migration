@@ -59,3 +59,11 @@ resource "aws_vpc_endpoint" "dms-endpoint" {
   subnet_ids         = aws_subnet.production[*].id
   security_group_ids = [aws_security_group.DMS-Endpoint-SG.id]
 }
+
+resource "aws_vpc_endpoint" "secretsmanager-endpoint" {
+  vpc_endpoint_type  = "Interface"
+  vpc_id             = aws_vpc.production.id
+  service_name       = "com.amazonaws.eu-west-1.secretsmanager"
+  subnet_ids         = aws_subnet.production[*].id
+  security_group_ids = [aws_security_group.DMS-Endpoint-SG.id]
+}
